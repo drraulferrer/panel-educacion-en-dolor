@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Estado del corpus · Educación en Dolor</title>
+</head>
+<body>
+<style>
+  :root {
+    --ground:#f7f9fa; --panel:#fff; --ink:#14303f; --ink-2:#5b7683;
+    --line:#dde5e9; --line-2:#eef3f5;
+    --teal:#2f7f8f; --teal-deep:#1d5866; --gold:#c9a227; --coral:#c25e4a;
+    --track:#e6edf0;
+    --shadow:0 1px 2px rgba(20,48,63,.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ground:#0f171b; --panel:#16232a; --ink:#e4edf1; --ink-2:#93a9b4;
+      --line:#26353d; --line-2:#1d2b32; --track:#22323a;
+      --teal:#57b6c6; --teal-deep:#8ad3e0; --gold:#d9b545; --coral:#d9765f;
+      --shadow:none;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:#0f171b; --panel:#16232a; --ink:#e4edf1; --ink-2:#93a9b4;
+    --line:#26353d; --line-2:#1d2b32; --track:#22323a;
+    --teal:#57b6c6; --teal-deep:#8ad3e0; --gold:#d9b545; --coral:#d9765f;
+    --shadow:none;
+  }
+  :root[data-theme="light"] {
+    --ground:#f7f9fa; --panel:#fff; --ink:#14303f; --ink-2:#5b7683;
+    --line:#dde5e9; --line-2:#eef3f5; --track:#e6edf0;
+    --teal:#2f7f8f; --teal-deep:#1d5866; --gold:#c9a227; --coral:#c25e4a;
+    --shadow:0 1px 2px rgba(20,48,63,.06);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--ground); color:var(--ink);
+    font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  .wrap{max-width:980px; margin:0 auto; padding:34px 20px 72px}
+
+  header{display:flex; flex-wrap:wrap; align-items:baseline; gap:12px;
+         justify-content:space-between; margin-bottom:6px}
+  h1{font-family:Charter,"Bitstream Charter",Georgia,serif; font-weight:600;
+     font-size:25px; margin:0; letter-spacing:-.2px; text-wrap:balance}
+  .sello{font-size:12px; color:var(--ink-2); font-variant-numeric:tabular-nums}
+  .sello b{color:var(--teal); font-weight:600}
+  .sub{color:var(--ink-2); margin:0 0 26px; font-size:14px; max-width:62ch}
+
+  .cifras{display:grid; grid-template-columns:repeat(auto-fit,minmax(132px,1fr));
+          gap:1px; background:var(--line); border:1px solid var(--line);
+          border-radius:10px; overflow:hidden; margin-bottom:30px; box-shadow:var(--shadow)}
+  .cifra{background:var(--panel); padding:13px 15px}
+  .cifra .v{font-size:23px; font-weight:600; letter-spacing:-.4px;
+            font-variant-numeric:tabular-nums; line-height:1.15}
+  .cifra .k{font-size:11px; color:var(--ink-2); text-transform:uppercase;
+            letter-spacing:.7px; margin-top:3px}
+
+  .barra-total{height:7px; background:var(--track); border-radius:4px;
+               overflow:hidden; margin-bottom:30px}
+  .barra-total i{display:block; height:100%; background:var(--teal); border-radius:4px}
+
+  h2{font-size:12px; text-transform:uppercase; letter-spacing:.9px;
+     color:var(--ink-2); font-weight:600; margin:0 0 10px}
+
+  .tabla{border:1px solid var(--line); border-radius:10px; overflow:hidden;
+         background:var(--panel); box-shadow:var(--shadow)}
+  .fila{display:grid; grid-template-columns:44px 1fr 128px 84px 58px;
+        gap:14px; align-items:center; padding:11px 15px;
+        border-bottom:1px solid var(--line-2)}
+  .fila:last-child{border-bottom:0}
+  .fila.vacio{opacity:.62}
+  @media (max-width:640px){
+    .fila{grid-template-columns:40px 1fr 62px; row-gap:7px}
+    .fila .medida{grid-column:2 / -1; order:3}
+    .fila .cuenta{order:2; text-align:right}
+    .fila .pct{display:none}
+  }
+
+  .cod{font-family:ui-monospace,"SF Mono",Menlo,monospace; font-size:12.5px;
+       color:var(--ink-2); font-variant-numeric:tabular-nums}
+  .nombre{font-weight:500}
+  .nombre .prio{display:inline-block; margin-left:7px; font-size:10px;
+                padding:1px 5px; border-radius:3px; vertical-align:1px;
+                background:var(--line-2); color:var(--ink-2);
+                letter-spacing:.4px; font-weight:600}
+  .nombre .prio.A{background:color-mix(in srgb,var(--gold) 22%,transparent); color:var(--ink)}
+  .mods{margin-top:4px; font-size:11.5px; color:var(--ink-2);
+        font-variant-numeric:tabular-nums}
+  .medida{height:6px; background:var(--track); border-radius:3px; overflow:hidden}
+  .medida i{display:block; height:100%; background:var(--teal); border-radius:3px}
+  .medida i.cero{background:transparent}
+  .cuenta{font-variant-numeric:tabular-nums; font-size:13.5px; text-align:right}
+  .cuenta b{font-weight:600}
+  .cuenta span{color:var(--ink-2)}
+  .pct{font-variant-numeric:tabular-nums; font-size:12.5px; color:var(--ink-2);
+       text-align:right}
+  .pct.cero{color:var(--coral)}
+
+  .pie{margin-top:26px; padding-top:16px; border-top:1px solid var(--line);
+       color:var(--ink-2); font-size:12.5px; display:flex; flex-wrap:wrap;
+       gap:8px 18px; justify-content:space-between}
+  code{font-family:ui-monospace,Menlo,monospace; background:var(--line-2);
+       padding:1px 5px; border-radius:3px; font-size:.9em}
+  .fuente{font-size:11px}
+  .fuente.vivo{color:var(--teal)}
+
+  .aviso{display:none; gap:12px; align-items:flex-start;
+         border:1px solid color-mix(in srgb,var(--gold) 45%,var(--line));
+         background:color-mix(in srgb,var(--gold) 10%,transparent);
+         border-radius:9px; padding:12px 14px; margin-bottom:22px; font-size:13.5px}
+  .aviso.ver{display:flex}
+  .aviso .t{font-weight:600; margin-bottom:3px}
+  .aviso p{margin:0; color:var(--ink-2)}
+  .aviso code{display:inline-block; margin-top:6px}
+
+  button.recargar{font:inherit; font-size:12.5px; color:var(--ink);
+    background:var(--panel); border:1px solid var(--line); border-radius:6px;
+    padding:4px 11px; cursor:pointer; margin-left:10px}
+  button.recargar:hover{border-color:var(--teal); color:var(--teal)}
+  button.recargar:focus-visible{outline:2px solid var(--teal); outline-offset:2px}
+  button.recargar[disabled]{opacity:.4; cursor:not-allowed}
+</style>
+
+<div class="wrap">
+
+  <header>
+    <h1>Estado del corpus</h1>
+    <div class="sello">Actualizado <b id="sello">—</b> <span id="fuente" class="fuente"></span>
+      <button class="recargar" id="btn" type="button">Actualizar</button></div>
+  </header>
+  <p class="sub">Base de Conocimiento Educación en Dolor · conceptos escritos frente a
+     los presupuestados en la taxonomía, por dominio.</p>
+
+  <div class="aviso" id="aviso">
+    <div>
+      <div class="t">Estás viendo una instantánea, no datos en vivo</div>
+      <p>Esta copia no lee tu corpus, así que recargar no cambia las cifras.
+         Para que se actualicen al recargar, arranca el panel en local:</p>
+      <p><code>python3 build/servir.py</code></p>
+    </div>
+  </div>
+
+  <div class="cifras" id="cifras"></div>
+  <div class="barra-total"><i id="barra-total"></i></div>
+
+  <h2>Los 15 dominios</h2>
+  <div class="tabla" id="tabla"></div>
+
+  <div class="pie">
+    <span>Fuente de verdad: <code>ontologia/dominios.yaml</code> + <code>conceptos/</code></span>
+    <span>Publicado en GitHub Pages · se actualiza con <code>python3 build/publicar.py</code></span>
+  </div>
+</div>
+
+<script>
+const INSTANTANEA = {"generado": "28/07/2026 21:52", "total": 215, "objetivo": 3296, "modulos_totales": 227, "modulos_cerrados": 13, "dominios_iniciados": 3, "relaciones": 769, "referencias_verificadas": 61, "madurez": {"M3": 197, "M2": 18}, "dominios": [{"id": "D01", "nombre": "Fundamentos del dolor", "prioridad": "A", "objetivo_dominio": "Establecer el marco conceptual común: qué es el dolor, qué no es, cómo se relaciona con el daño y por qué el modelo biopsicosocial es el suelo sobre el que se apoya todo lo demás.", "modulos": 14, "escritos": 179, "presupuestados": 216, "modulos_con_contenido": [{"id": "D01.M01", "nombre": "Naturaleza y definición del dolor", "n": 16, "objetivo": 16}, {"id": "D01.M02", "nombre": "Dolor y nocicepción", "n": 14, "objetivo": 14}, {"id": "D01.M03", "nombre": "Dimensiones y componentes de la experiencia", "n": 15, "objetivo": 14}, {"id": "D01.M04", "nombre": "Taxonomía por mecanismos", "n": 18, "objetivo": 18}, {"id": "D01.M05", "nombre": "Dolor agudo, subagudo y persistente", "n": 16, "objetivo": 16}, {"id": "D01.M06", "nombre": "Relación daño-dolor", "n": 16, "objetivo": 16}, {"id": "D01.M07", "nombre": "Función biológica y sistemas de protección", "n": 14, "objetivo": 14}, {"id": "D01.M09", "nombre": "Modelo biopsicosocial", "n": 16, "objetivo": 16}, {"id": "D01.M10", "nombre": "Epidemiología e impacto", "n": 14, "objetivo": 14}, {"id": "D01.M11", "nombre": "Mitos y creencias sobre el dolor", "n": 22, "objetivo": 22}, {"id": "D01.M12", "nombre": "Lenguaje y terminología", "n": 18, "objetivo": 18}], "modulos_cerrados": 11}, {"id": "D02", "nombre": "Neurobiología y mecanismos", "prioridad": "A", "objetivo_dominio": "Dar la profundidad mecanística necesaria para explicar el dolor con rigor, sin caer en el reduccionismo neurocéntrico ni en la metáfora sin sustrato.", "modulos": 17, "escritos": 20, "presupuestados": 266, "modulos_con_contenido": [{"id": "D02.M09", "nombre": "Sensibilización central y nociplasticidad", "n": 20, "objetivo": 20}], "modulos_cerrados": 1}, {"id": "D03", "nombre": "Evaluación y razonamiento clínico", "prioridad": "A", "objetivo_dominio": "Convertir el marco conceptual en una evaluación estructurada, reproducible y orientada a mecanismos y a decisiones.", "modulos": 17, "escritos": 16, "presupuestados": 254, "modulos_con_contenido": [{"id": "D03.M03", "nombre": "Banderas rojas y cribado", "n": 16, "objetivo": 16}], "modulos_cerrados": 1}, {"id": "D04", "nombre": "Educación terapéutica en dolor", "prioridad": "A", "objetivo_dominio": "Núcleo diferencial del proyecto: convertir la educación en dolor en una intervención diseñada, dosificada, evaluable y enseñable.", "modulos": 17, "escritos": 0, "presupuestados": 266, "modulos_con_contenido": [], "modulos_cerrados": 0}, {"id": "D05", "nombre": "Comunicación clínica", "prioridad": "A", "objetivo_dominio": "La competencia que decide si el contenido llega. Comunicación como técnica entrenable, no como rasgo de personalidad.", "modulos": 14, "escritos": 0, "presupuestados": 194, "modulos_con_contenido": [], "modulos_cerrados": 0}, {"id": "D06", "nombre": "Cambio de comportamiento", "prioridad": "A", "objetivo_dominio": "Cerrar la brecha entre entender y hacer. Técnicas operativas con taxonomía compartida y verificable.", "modulos": 14, "escritos": 0, "presupuestados": 200, "modulos_con_contenido": [], "modulos_cerrados": 0}, {"id": "D07", "nombre": "Factores psicológicos", "prioridad": "A", "objetivo_dominio": "Tratar lo psicológico con la misma precisión que lo biológico, y marcar con claridad los límites de competencia de cada profesión.", "modulos": 16, "escritos": 0, "presupuestados": 234, "modulos_con_contenido": [], "modulos_cerrados": 0}, {"id": "D08", "nombre": "Factores sociales y contextuales", "prioridad": "B", "objetivo_dominio": "Lo que la consulta no ve y determina el resultado: desigualdad, trabajo, cultura, sistema y estigma.", "modulos": 13, "escritos": 0, "presupuestados": 168, "modulos_con_contenido": [], "modulos_cerrados": 0}, {"id": "D09", "nombre": "Ejercicio terapéutico y movimiento", "prioridad": "A", "objetivo_dominio": "La intervención con mejor relación evidencia-coste, tratada con precisión de dosis y no como consejo genérico.", "modulos": 16, "escritos": 0, "presupuestados": 236, "modulos_con_contenido": [], "modulos_cerrados": 0}, {"id": "D10", "nombre": "Autogestión y autocuidado", "prioridad": "A", "objetivo_dominio": "Transferir el control al paciente con herramientas concretas y planificadas, no con exhortaciones.", "modulos": 13, "escritos": 0, "presupuestados": 176, "modulos_con_contenido": [], "modulos_cerrados": 0}, {"id": "D11", "nombre": "Condiciones clínicas", "prioridad": "A", "objetivo_dominio": "Aplicar todo lo anterior a los cuadros concretos por los que la gente consulta, sin repetir el marco en cada uno.", "modulos": 19, "escritos": 0, "presupuestados": 330, "modulos_con_contenido": [], "modulos_cerrados": 0}, {"id": "D12", "nombre": "Docencia y diseño instruccional", "prioridad": "B", "objetivo_dominio": "Cómo se enseña todo lo anterior. Habilita la vertical de formación y la acreditación.", "modulos": 15, "escritos": 0, "presupuestados": 200, "modulos_con_contenido": [], "modulos_cerrados": 0}, {"id": "D13", "nombre": "Evidencia científica y método", "prioridad": "A", "objetivo_dominio": "El control de calidad epistemológico del proyecto: cómo se decide qué entra, con qué certeza y con qué caducidad.", "modulos": 15, "escritos": 0, "presupuestados": 212, "modulos_con_contenido": [], "modulos_cerrados": 0}, {"id": "D14", "nombre": "Recursos educativos y producción", "prioridad": "B", "objetivo_dominio": "La capa que convierte conocimiento en producto: formatos, calidad, accesibilidad y derechos.", "modulos": 13, "escritos": 0, "presupuestados": 158, "modulos_con_contenido": [], "modulos_cerrados": 0}, {"id": "D15", "nombre": "Salud digital e inteligencia artificial", "prioridad": "B", "objetivo_dominio": "El dominio que hace del proyecto algo contemporáneo y que se autoalimenta: la tecnología como parte del contenido, no solo como infraestructura.", "modulos": 14, "escritos": 0, "presupuestados": 186, "modulos_con_contenido": [], "modulos_cerrados": 0}]};
+
+const nf = n => n.toLocaleString('es-ES');
+
+let EN_VIVO = false;
+
+function pinta(d, vivo) {
+  EN_VIVO = vivo;
+  document.getElementById('sello').textContent = d.generado;
+  const f = document.getElementById('fuente');
+  f.textContent = vivo ? '· en vivo' : '· instantánea';
+  f.className = 'fuente' + (vivo ? ' vivo' : '');
+  document.getElementById('aviso').classList.toggle('ver', !vivo);
+  document.getElementById('btn').disabled = !vivo;
+
+  const pct = d.total / d.objetivo * 100;
+  const cifras = [
+    [nf(d.total), 'conceptos escritos'],
+    [pct.toFixed(1).replace('.', ',') + ' %', 'del total previsto'],
+    [d.modulos_cerrados + ' / ' + d.modulos_totales, 'módulos cerrados'],
+    [d.dominios_iniciados + ' / ' + d.dominios.length, 'dominios iniciados'],
+    [nf(d.relaciones), 'relaciones'],
+    [d.referencias_verificadas, 'referencias verificadas'],
+  ];
+  document.getElementById('cifras').innerHTML = cifras
+    .map(([v, k]) => `<div class="cifra"><div class="v">${v}</div><div class="k">${k}</div></div>`)
+    .join('');
+  document.getElementById('barra-total').style.width = Math.max(pct, .4) + '%';
+
+  document.getElementById('tabla').innerHTML = d.dominios.map(x => {
+    const p = x.presupuestados ? x.escritos / x.presupuestados * 100 : 0;
+    const mods = x.modulos_con_contenido.length
+      ? `<div class="mods">${x.modulos_con_contenido
+          .map(m => `${m.id.split('.')[1]} ${m.n}/${m.objetivo}`).join(' · ')}</div>`
+      : '';
+    return `<div class="fila${x.escritos ? '' : ' vacio'}">
+      <div class="cod">${x.id}</div>
+      <div><span class="nombre">${x.nombre}<span class="prio ${x.prioridad}">${x.prioridad}</span></span>${mods}</div>
+      <div class="medida"><i class="${p ? '' : 'cero'}" style="width:${Math.min(p, 100)}%"></i></div>
+      <div class="cuenta"><b>${nf(x.escritos)}</b> <span>/ ${nf(x.presupuestados)}</span></div>
+      <div class="pct${p ? '' : ' cero'}">${p ? p.toFixed(1).replace('.', ',') + '%' : '—'}</div>
+    </div>`;
+  }).join('');
+}
+
+// Si lo sirve build/servir.py, los datos se recalculan en cada carga.
+function cargar() {
+  return fetch('datos.json?t=' + Date.now(), {cache: 'no-store'})
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(d => pinta(d, true))
+    .catch(() => pinta(INSTANTANEA, false));
+}
+
+document.getElementById('btn').addEventListener('click', e => {
+  if (!EN_VIVO) return;
+  e.target.disabled = true;
+  cargar().finally(() => { e.target.disabled = false; });
+});
+
+cargar();
+</script>
+</body>
+</html>
